@@ -48,5 +48,10 @@ class UserService {
         }
         return;
     }
+
+    async UpdateByImage(user, image) {
+        user.image = image;
+        return await user.save();
+    }
 }
 module.exports = new UserService();

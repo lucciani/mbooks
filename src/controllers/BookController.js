@@ -36,7 +36,6 @@ class BookController {
                 })
             }
 
-            console.log(errors)
             if (!errors.length == 0) {
                 return response.status(400).json({ error: errors });
             } else {

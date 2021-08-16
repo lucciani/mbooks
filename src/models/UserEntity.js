@@ -13,6 +13,9 @@ const User = new db.Schema({
         type: String,
         require: '{PATH} is required!',
         select: false
+    },
+    image: {
+        type: String
     }
 });
 

@@ -26,7 +26,6 @@ module.exports = (req, res, next) => {
         } else {
             const { id } = decoded.params
             req.userId =  id;
-            // console.log('decode: ', id)
             return next();
         }
 

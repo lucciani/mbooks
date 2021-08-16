@@ -7,7 +7,6 @@ class UserController {
 
     async create(request, response) {
         try {
-
             let errors = []
             let { name, email, password } = request.body;
 
@@ -32,14 +31,13 @@ class UserController {
                 })
             }
 
-            console.log(errors)
             if (!errors.length == 0) {
                 return response.status(400).json({ error: errors });
             } else {
                 const userExists = await userService.GetByEmail(email);
 
                 if (userExists) {
-                    return response.status(200).send({
+                    return response.status(400).send({
                         error: {
                             param: "email",
                             message: 'There is already one with this email'
@@ -96,10 +94,18 @@ class UserController {
         return response.status(404).send({ error: 'Users not found' });
     };
 
+    async findById(request, response) {
+        const users = await userService.GetById(request.params.id);
+        if (users) {
+            return response.status(200).send({ users: users });
+        }
+        return response.status(404).send({ error: 'Users not found' });
+    };
+
     async update(request, response) {
         let errors = []
         let id = request.params.id;
-        let { name, email, password } = request.body;
+        let { name, email } = request.body;
 
         if (!id) {
             errors.push({
@@ -154,6 +160,22 @@ class UserController {
             token: generateToken({id: user.id}),
         });
 
+
+    };
+
+    async upload(request, response) {
+        const file  = request.file;
+        console.log(file)
+
+        const user = await userService.GetById(request.userId);
+        if(!user){
+            return response.status(404).send({ error: 'Users not found' });
+        }
+        const userSalved = await userService.UpdateByImage(user, file.path);
+
+        userSalved.password = undefined;
+
+        return response.status(200).send({ users: userSalved });
 
     };
 };
